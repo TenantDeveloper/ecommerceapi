@@ -1,0 +1,14 @@
+﻿2019-08-22 16:33:06,378 [11] ERROR Product [(null)] - Exception of type 'System.Exception' was thrown.
+2019-08-22 17:00:09,324 [10] ERROR Product [(null)] - A route named 'GetProduct' could not be found in the route collection.
+Parameter name: name
+2019-08-22 17:08:13,447 [5] ERROR Product [(null)] - Missing type map configuration or unsupported mapping.
+
+Mapping types:
+Product -> ProductDto
+ecommerce_DAL.Product -> ecommerceServices.ViewModel.ProductDto
+2019-08-22 17:19:17,177 [9] ERROR Product [(null)] - A route named '{id:int}' could not be found in the route collection.
+Parameter name: name
+2019-08-22 17:31:54,199 [6] ERROR Product [(null)] - A route named 'GetProduct' could not be found in the route collection.
+Parameter name: name
+2019-08-22 17:35:08,714 [11] ERROR Product [(null)] - A route named 'api/product' could not be found in the route collection.
+Parameter name: name

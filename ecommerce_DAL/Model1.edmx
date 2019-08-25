@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ECom_DemoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Category_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Category_Discription" Type="nvarchar(max)" />
+          <Property Name="Category_Image" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Product_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Product_Price" Type="money" Nullable="false" />
+          <Property Name="Product_Discount" Type="tinyint" />
+          <Property Name="Quantity_In_Stock" Type="int" />
+          <Property Name="Pecies_Per_Unit" Type="int" />
+          <Property Name="Unit_Weight" Type="int" />
+          <Property Name="Product_Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Category_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product_Images">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Product_Id" Type="int" Nullable="false" />
+          <Property Name="Addition_Date" Type="datetime" />
+          <Property Name="IsMain_Img" Type="bit" />
+          <Property Name="Image_Path" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ECom_Demo.dbo.tblCategory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="tblCategory">
+          <Key>
+            <PropertyRef Name="categoryId" />
+            <PropertyRef Name="categoryName" />
+          </Key>
+          <Property Name="categoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="categoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="categoryDiscription" Type="nvarchar(max)" />
+          <Property Name="categoryImg" Type="varchar(max)" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ECom_Demo.dbo.tblProduct' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="tblProduct">
+          <Key>
+            <PropertyRef Name="productId" />
+            <PropertyRef Name="productName" />
+            <PropertyRef Name="productPrice" />
+            <PropertyRef Name="productDescription" />
+            <PropertyRef Name="categoryId" />
+          </Key>
+          <Property Name="productId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="productName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="productPrice" Type="money" Nullable="false" />
+          <Property Name="productDiscount" Type="tinyint" />
+          <Property Name="quanitity" Type="int" />
+          <Property Name="pecies" Type="int" />
+          <Property Name="unitWeight" Type="int" />
+          <Property Name="productDescription" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="categoryId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="Fk_Product_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_Product_Images">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Product_Images" Type="Self.Product_Images" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product_Images">
+              <PropertyRef Name="Product_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="Sp_CreateProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="productName" Type="nvarchar" Mode="In" />
+          <Parameter Name="productPrice" Type="money" Mode="In" />
+          <Parameter Name="productDiscount" Type="tinyint" Mode="In" />
+          <Parameter Name="quantity" Type="int" Mode="In" />
+          <Parameter Name="pecies" Type="int" Mode="In" />
+          <Parameter Name="unitWeight" Type="int" Mode="In" />
+          <Parameter Name="productDescription" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="categoryId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_DeleteProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="productId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetCategoryWithProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Sp_GetProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Sp_UpdateProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="productId" Type="int" Mode="In" />
+          <Parameter Name="productName" Type="nvarchar" Mode="In" />
+          <Parameter Name="productPrice" Type="money" Mode="In" />
+          <Parameter Name="productDiscount" Type="tinyint" Mode="In" />
+          <Parameter Name="quantity" Type="int" Mode="In" />
+          <Parameter Name="pecies" Type="int" Mode="In" />
+          <Parameter Name="unitWeight" Type="int" Mode="In" />
+          <Parameter Name="productDescription" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="categoryId" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="ECom_DemoModelStoreContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product_Images" EntityType="Self.Product_Images" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblCategory" EntityType="Self.tblCategory" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tblCategory].[categoryId] AS [categoryId], 
+    [tblCategory].[categoryName] AS [categoryName], 
+    [tblCategory].[categoryDiscription] AS [categoryDiscription], 
+    [tblCategory].[categoryImg] AS [categoryImg]
+    FROM [dbo].[tblCategory] AS [tblCategory]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="tblProduct" EntityType="Self.tblProduct" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tblProduct].[productId] AS [productId], 
+    [tblProduct].[productName] AS [productName], 
+    [tblProduct].[productPrice] AS [productPrice], 
+    [tblProduct].[productDiscount] AS [productDiscount], 
+    [tblProduct].[quanitity] AS [quanitity], 
+    [tblProduct].[pecies] AS [pecies], 
+    [tblProduct].[unitWeight] AS [unitWeight], 
+    [tblProduct].[productDescription] AS [productDescription], 
+    [tblProduct].[categoryId] AS [categoryId]
+    FROM [dbo].[tblProduct] AS [tblProduct]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="Fk_Product_Category" Association="Self.Fk_Product_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_Product_Images" Association="Self.Fk_Product_Images">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Product_Images" EntitySet="Product_Images" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ECom_DemoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Category_Discription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Category_Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Products" Relationship="Self.Fk_Product_Category" FromRole="Category" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Product_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Product_Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Product_Discount" Type="Byte" />
+          <Property Name="Quantity_In_Stock" Type="Int32" />
+          <Property Name="Pecies_Per_Unit" Type="Int32" />
+          <Property Name="Unit_Weight" Type="Int32" />
+          <Property Name="Product_Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Category_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="Self.Fk_Product_Category" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="Product_Images" Relationship="Self.Fk_Product_Images" FromRole="Product" ToRole="Product_Images" />
+        </EntityType>
+        <EntityType Name="Product_Images">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Product_Id" Type="Int32" Nullable="false" />
+          <Property Name="Addition_Date" Type="DateTime" Precision="3" />
+          <Property Name="IsMain_Img" Type="Boolean" />
+          <Property Name="Image_Path" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Self.Fk_Product_Images" FromRole="Product_Images" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="tblCategory">
+          <Key>
+            <PropertyRef Name="categoryId" />
+            <PropertyRef Name="categoryName" />
+          </Key>
+          <Property Name="categoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="categoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="categoryDiscription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="categoryImg" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tblProduct">
+          <Key>
+            <PropertyRef Name="productId" />
+            <PropertyRef Name="productName" />
+            <PropertyRef Name="productPrice" />
+            <PropertyRef Name="productDescription" />
+            <PropertyRef Name="categoryId" />
+          </Key>
+          <Property Name="productId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="productName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="productPrice" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="productDiscount" Type="Byte" />
+          <Property Name="quanitity" Type="Int32" />
+          <Property Name="pecies" Type="Int32" />
+          <Property Name="unitWeight" Type="Int32" />
+          <Property Name="productDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="categoryId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="Fk_Product_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Fk_Product_Images">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Product_Images" Type="Self.Product_Images" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product_Images">
+              <PropertyRef Name="Product_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ECom_DemoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Product_Images" EntityType="Self.Product_Images" />
+          <EntitySet Name="tblCategories" EntityType="Self.tblCategory" />
+          <EntitySet Name="tblProducts" EntityType="Self.tblProduct" />
+          <AssociationSet Name="Fk_Product_Category" Association="Self.Fk_Product_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="Fk_Product_Images" Association="Self.Fk_Product_Images">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Product_Images" EntitySet="Product_Images" />
+          </AssociationSet>
+          <FunctionImport Name="Sp_CreateProduct">
+            <Parameter Name="productName" Mode="In" Type="String" />
+            <Parameter Name="productPrice" Mode="In" Type="Decimal" />
+            <Parameter Name="productDiscount" Mode="In" Type="Byte" />
+            <Parameter Name="quantity" Mode="In" Type="Int32" />
+            <Parameter Name="pecies" Mode="In" Type="Int32" />
+            <Parameter Name="unitWeight" Mode="In" Type="Int32" />
+            <Parameter Name="productDescription" Mode="In" Type="String" />
+            <Parameter Name="categoryId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetCategoryWithProducts" ReturnType="Collection(ECom_DemoModel.Sp_GetCategoryWithProducts_Result)" />
+          <FunctionImport Name="Sp_UpdateProduct">
+            <Parameter Name="productId" Mode="In" Type="Int32" />
+            <Parameter Name="productName" Mode="In" Type="String" />
+            <Parameter Name="productPrice" Mode="In" Type="Decimal" />
+            <Parameter Name="productDiscount" Mode="In" Type="Byte" />
+            <Parameter Name="quantity" Mode="In" Type="Int32" />
+            <Parameter Name="pecies" Mode="In" Type="Int32" />
+            <Parameter Name="unitWeight" Mode="In" Type="Int32" />
+            <Parameter Name="productDescription" Mode="In" Type="String" />
+            <Parameter Name="categoryId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_DeleteProduct">
+          <Parameter Name="productId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetProducts" ReturnType="Collection(ECom_DemoModel.Sp_GetProducts_Result)" />
+        </EntityContainer>
+        <ComplexType Name="Sp_GetCategoryWithProducts_Result">
+          <Property Type="String" Name="Product_Name" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Category_Name" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Category_Discription" Nullable="true" />
+          <Property Type="String" Name="Category_Image" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetProducts_Result">
+          <Property Type="Int32" Name="Id" Nullable="true" />
+          <Property Type="String" Name="Product_Name" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Product_Price" Nullable="true" Precision="19" />
+          <Property Type="String" Name="Product_Description" Nullable="true" />
+          <Property Type="Byte" Name="Product_Discount" Nullable="true" />
+          <Property Type="Int32" Name="Quantity_In_Stock" Nullable="true" />
+          <Property Type="Int32" Name="Unit_Weight" Nullable="true" />
+          <Property Type="Int32" Name="Category_Id" Nullable="true" />
+          <Property Type="String" Name="Category_Name" Nullable="true" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ECom_DemoModelStoreContainer" CdmEntityContainer="ECom_DemoEntities">
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="ECom_DemoModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Category_Name" ColumnName="Category_Name" />
+                <ScalarProperty Name="Category_Discription" ColumnName="Category_Discription" />
+                <ScalarProperty Name="Category_Image" ColumnName="Category_Image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="ECom_DemoModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+                <ScalarProperty Name="Product_Price" ColumnName="Product_Price" />
+                <ScalarProperty Name="Product_Discount" ColumnName="Product_Discount" />
+                <ScalarProperty Name="Quantity_In_Stock" ColumnName="Quantity_In_Stock" />
+                <ScalarProperty Name="Pecies_Per_Unit" ColumnName="Pecies_Per_Unit" />
+                <ScalarProperty Name="Unit_Weight" ColumnName="Unit_Weight" />
+                <ScalarProperty Name="Product_Description" ColumnName="Product_Description" />
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="ECom_DemoModel.Product">
+              <ModificationFunctionMapping>
+                <InsertFunction FunctionName="ECom_DemoModel.Store.Sp_CreateProduct" >
+                  <ScalarProperty Name="Category_Id" ParameterName="categoryId" />
+                  <ScalarProperty Name="Product_Description" ParameterName="productDescription" />
+                  <ScalarProperty Name="Unit_Weight" ParameterName="unitWeight" />
+                  <ScalarProperty Name="Pecies_Per_Unit" ParameterName="pecies" />
+                  <ScalarProperty Name="Quantity_In_Stock" ParameterName="quantity" />
+                  <ScalarProperty Name="Product_Discount" ParameterName="productDiscount" />
+                  <ScalarProperty Name="Product_Price" ParameterName="productPrice" />
+                  <ScalarProperty Name="Product_Name" ParameterName="productName" />
+                </InsertFunction>
+                <UpdateFunction FunctionName="ECom_DemoModel.Store.Sp_UpdateProduct" >
+                  <ScalarProperty Name="Category_Id" ParameterName="categoryId" Version="Current" />
+                  <ScalarProperty Name="Product_Description" ParameterName="productDescription" Version="Current" />
+                  <ScalarProperty Name="Unit_Weight" ParameterName="unitWeight" Version="Current" />
+                  <ScalarProperty Name="Pecies_Per_Unit" ParameterName="pecies" Version="Current" />
+                  <ScalarProperty Name="Quantity_In_Stock" ParameterName="quantity" Version="Current" />
+                  <ScalarProperty Name="Product_Discount" ParameterName="productDiscount" Version="Current" />
+                  <ScalarProperty Name="Product_Price" ParameterName="productPrice" Version="Current" />
+                  <ScalarProperty Name="Product_Name" ParameterName="productName" Version="Current" />
+                  <ScalarProperty Name="Id" ParameterName="productId" Version="Current" />
+                </UpdateFunction>
+                <DeleteFunction FunctionName="ECom_DemoModel.Store.Sp_DeleteProduct" >
+                  <ScalarProperty Name="Id" ParameterName="productId" />
+                </DeleteFunction>
+              </ModificationFunctionMapping>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product_Images">
+            <EntityTypeMapping TypeName="ECom_DemoModel.Product_Images">
+              <MappingFragment StoreEntitySet="Product_Images">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Product_Id" ColumnName="Product_Id" />
+                <ScalarProperty Name="Addition_Date" ColumnName="Addition_Date" />
+                <ScalarProperty Name="IsMain_Img" ColumnName="IsMain_Img" />
+                <ScalarProperty Name="Image_Path" ColumnName="Image_Path" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblCategories">
+            <EntityTypeMapping TypeName="ECom_DemoModel.tblCategory">
+              <MappingFragment StoreEntitySet="tblCategory">
+                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
+                <ScalarProperty Name="categoryName" ColumnName="categoryName" />
+                <ScalarProperty Name="categoryDiscription" ColumnName="categoryDiscription" />
+                <ScalarProperty Name="categoryImg" ColumnName="categoryImg" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblProducts">
+            <EntityTypeMapping TypeName="ECom_DemoModel.tblProduct">
+              <MappingFragment StoreEntitySet="tblProduct">
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="productName" ColumnName="productName" />
+                <ScalarProperty Name="productPrice" ColumnName="productPrice" />
+                <ScalarProperty Name="productDiscount" ColumnName="productDiscount" />
+                <ScalarProperty Name="quanitity" ColumnName="quanitity" />
+                <ScalarProperty Name="pecies" ColumnName="pecies" />
+                <ScalarProperty Name="unitWeight" ColumnName="unitWeight" />
+                <ScalarProperty Name="productDescription" ColumnName="productDescription" />
+                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_CreateProduct" FunctionName="ECom_DemoModel.Store.Sp_CreateProduct" />
+          <FunctionImportMapping FunctionImportName="Sp_GetCategoryWithProducts" FunctionName="ECom_DemoModel.Store.Sp_GetCategoryWithProducts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ECom_DemoModel.Sp_GetCategoryWithProducts_Result">
+                <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Category_Name" ColumnName="Category_Name" />
+                <ScalarProperty Name="Category_Discription" ColumnName="Category_Discription" />
+                <ScalarProperty Name="Category_Image" ColumnName="Category_Image" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_UpdateProduct" FunctionName="ECom_DemoModel.Store.Sp_UpdateProduct" />
+          <FunctionImportMapping FunctionImportName="Sp_DeleteProduct" FunctionName="ECom_DemoModel.Store.Sp_DeleteProduct" />
+          <FunctionImportMapping FunctionImportName="Sp_GetProducts" FunctionName="ECom_DemoModel.Store.Sp_GetProducts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ECom_DemoModel.Sp_GetProducts_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+                <ScalarProperty Name="Product_Price" ColumnName="Product_Price" />
+                <ScalarProperty Name="Product_Description" ColumnName="Product_Description" />
+                <ScalarProperty Name="Product_Discount" ColumnName="Product_Discount" />
+                <ScalarProperty Name="Quantity_In_Stock" ColumnName="Quantity_In_Stock" />
+                <ScalarProperty Name="Unit_Weight" ColumnName="Unit_Weight" />
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+                <ScalarProperty Name="Category_Name" ColumnName="Category_Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
